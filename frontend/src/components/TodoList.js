@@ -1,16 +1,11 @@
 import React from 'react';
 import TodoItem from './TodoItem';
-import { useSelector, useDispatch } from "react-redux";
-
-import { fetchTodoList } from '../redux/tasksSlice'
+import { useSelector } from "react-redux";
 
 const TodoList = () => {
 	const todos = useSelector((state)=>{
 		return state.tasks;
 	});
-
-	const dispatch = useDispatch()
-  	const posts = useSelector(fetchTodoList)
 
 	return (
 		<ul className="tasks-list">
