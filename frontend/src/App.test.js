@@ -1,18 +1,15 @@
+import React from 'react';
+import { render } from '@testing-library/react';
+import App from './App';
 
-// import React from 'react';
-// import ReactDOM from 'react-dom/client';
+import store from "./redux/store";
+import { Provider } from "react-redux";
 
-// import App from './App';
-// import { Provider } from 'react-redux';
-// import store from "./redux/store";
-
-// const root = ReactDOM.createRoot(document.getElementById('root'));
-test('renders without crashing', () => {
-//   root.render(
-//     <React.StrictMode>
-//       <Provider store={store}>
-//         <App />
-//       </Provider>
-//     </React.StrictMode>
-//   );
+test('renders title', () => {
+    const { getByText } = render(
+        <Provider store={store}>
+            <App />
+        </Provider>
+    );
+    expect(getByText('My Tasks')).toBeInTheDocument()
 });

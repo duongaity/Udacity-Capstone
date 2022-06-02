@@ -37,7 +37,7 @@ const TodoAdd = () => {
 			></input>
 
 			<button className="task-button" onClick={onSubmit}>
-				Save
+				Submit
 			</button>
 		</div>
 	);
