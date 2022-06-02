@@ -83,15 +83,23 @@ jobs:
     steps:
       - checkout
       - kubernetes/install-kubectl
+      - aws-eks/create-cluster:
+          cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
+          aws-region: $AWS_REGION
       - aws-eks/update-kubeconfig-with-authenticator:
-          aws-region: ${AWS_REGION}
-          cluster-name: udacity-cluster
+          aws-region: $AWS_REGION
+          cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           resource-file-path: configs/deployment.yaml
-          resource-name: nginx-deploy
+          resource-name: deployment/nginxwebapp
           show-kubectl-command: true
+      - run:
+          name: deploy kubectl
+          command: |
+            kubectl get pods
+            kubectl get services
 
 workflows:
   default:
