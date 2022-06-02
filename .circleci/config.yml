@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  aws-ecr: circleci/aws-ecr@8.1.2
+
 jobs:
   build-frontend:
     docker:
@@ -51,6 +54,42 @@ jobs:
             cd frontend
             npm audit --audit-level=critical --force
   
+  run-lint:
+      docker:
+        - image: circleci/node:13.8.0
+      steps:
+        - checkout
+        - run:
+            name: install dependencies
+            command: |
+              sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
+              sudo chmod +x /bin/hadolint
+        - run:
+            name: Run Lint
+            command: |
+              ls
+              hadolint Dockerfile --ignore DL3003
+  
+  upload-docker:
+    docker:
+      - image: cimg/node:16.13.2
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.14
+      - run:
+          name: Build Docker Image
+          command: |
+            docker build --tag=$DOCKER_IMAGE_NAME .
+      - run:
+          name: Push Docker Image to DockerHub
+          command: |
+            echo "Docker ID and Image: $DOCKER_IMAGE_NAME"
+            docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+            docker tag $DOCKER_IMAGE_NAME $DOCKER_USERNAME/$DOCKER_IMAGE_NAME
+            docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME
+
 workflows:
   default:
     jobs:
@@ -59,3 +98,7 @@ workflows:
           requires: [build-frontend]
       - scan-frontend:
           requires: [build-frontend]
+      - run-lint:
+          requires: [scan-frontend]
+      - upload-docker:
+          requires: [run-lint]
