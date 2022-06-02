@@ -99,6 +99,6 @@ workflows:
       - scan-frontend:
           requires: [build-frontend]
       - run-lint:
-          requires: [scan-frontend]
+          requires: [scan-frontend, test-frontend]
       - upload-docker:
           requires: [run-lint]
