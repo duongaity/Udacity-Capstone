@@ -85,7 +85,8 @@ jobs:
       - run:
           name: Push Docker Image to DockerHub
           command: |
-            echo "Docker ID and Image: $DOCKER_IMAGE_NAME"
+            echo "Docker Username: $DOCKER_USERNAME"
+            echo "Docker Image: $DOCKER_IMAGE_NAME"
             docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
             docker tag $DOCKER_IMAGE_NAME $DOCKER_USERNAME/$DOCKER_IMAGE_NAME
             docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME
@@ -98,7 +99,7 @@ workflows:
           requires: [build-frontend]
       - scan-frontend:
           requires: [build-frontend]
-      - run-lint:
-          requires: [scan-frontend, test-frontend]
+      # - run-lint:
+      #     requires: [scan-frontend, test-frontend]
       - upload-docker:
-          requires: [run-lint]
+          requires: [scan-frontend, test-frontend]

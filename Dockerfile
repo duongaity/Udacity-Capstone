@@ -1,8 +1,8 @@
 # 1. For build React app
-FROM node:alpine
+FROM node:alpine AS development
 
 # Set working directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Copy frontend
 COPY frontend/ ./frontend/
@@ -11,15 +11,14 @@ RUN cd frontend && npm install && npm run build
 # 2. For Nginx setup
 FROM nginx:alpine
 
-# Copy nginx
-COPY --from=build /app/.nginx/nginx.conf /etc/nginx/conf.d/default.conf
-WORKDIR /usr/share/nginx/html
+# Copy nginx config
+COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Remove default nginx static assets
-RUN rm -rf ./*
+RUN rm -rf /usr/share/nginx/html/*
 
-# Copy static assets from builder stage
-COPY --from=build /app/build .
+# Copy nginx
+COPY --from=development /usr/src/app/frontend/build/ /usr/share/nginx/html
 
 # Expose port 80
 EXPOSE 80
