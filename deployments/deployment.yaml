@@ -15,7 +15,7 @@ spec:
         app: nginxwebapp
     spec:
       containers:
-      - name: webapp
+      - name: nginxwebapp
         image: duongaity/udacity_capstone
         ports:
         - containerPort: 80

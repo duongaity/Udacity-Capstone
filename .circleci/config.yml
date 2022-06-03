@@ -81,7 +81,6 @@ jobs:
       - image: cimg/node:16.13.2
     steps:
       - checkout
-      - kubernetes/install-kubectl
       - aws-eks/create-cluster:
           cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
           aws-region: ${AWS_DEFAULT_REGION}
@@ -92,10 +91,10 @@ jobs:
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           resource-file-path: deployments/deployment.yaml
-          resource-name: deployment/nginxwebapp
+          resource-name: nginxwebapp
           show-kubectl-command: true
       - run:
-          name: deploy kubectl
+          name: Deploy kubectl
           command: |
             kubectl get pods
             kubectl get services
