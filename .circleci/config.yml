@@ -91,7 +91,7 @@ jobs:
           install-kubectl: true
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
-          resource-file-path: configs/deployment.yaml
+          resource-file-path: deployments/deployment.yaml
           resource-name: deployment/nginxwebapp
           show-kubectl-command: true
       - run:
