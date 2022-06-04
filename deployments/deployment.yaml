@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginxwebapp
+  name: nginx-deployment
   labels:
-    app: nginxwebapp
+    app: nginx-deployment
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: nginxwebapp
+      app: nginx-deployment
   template:
     metadata:
       labels:
-        app: nginxwebapp
+        app: nginx-deployment
     spec:
       containers:
-      - name: nginxwebapp
+      - name: nginx-deployment
         image: 346573986387.dkr.ecr.us-east-1.amazonaws.com/udacity_capstone
         ports:
         - containerPort: 80
@@ -24,13 +24,13 @@ status: {}
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginxwebapp
+  name: nginx-deployment
   labels:
-    run: nginxwebapp
+    run: nginx-deployment
 spec:
   ports:
   - port: 80
     protocol: TCP
   selector:
-    app: nginxwebapp
+    app: nginx-deployment
   type: LoadBalancer

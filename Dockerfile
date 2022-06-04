@@ -6,13 +6,16 @@ WORKDIR /usr/src/app
 
 # Copy frontend
 COPY frontend/ ./frontend/
-RUN cd frontend && npm install && npm run build
+RUN cd frontend
+RUN npm install
+RUN npm audit fix --force
+RUN npm run build
 
 # 2. For Nginx setup
 FROM nginx:alpine
 
 # Copy nginx config
-COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
+COPY /nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*
