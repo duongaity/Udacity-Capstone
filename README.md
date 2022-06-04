@@ -1,5 +1,7 @@
 # Udacity Capstone
 
+[![CircleCI](https://circleci.com/gh/duongaity/Udacity-Capstone/tree/master.svg?style=svg)](https://circleci.com/gh/duongaity/Udacity-Capstone/tree/master)
+
 In this project, I apply the skills and knowledge which were learned throughout the Cloud DevOps program from Udacity. These include:
 - Working in AWS
 - Using Circle CI to implement CICD
