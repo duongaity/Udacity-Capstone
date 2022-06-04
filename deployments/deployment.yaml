@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nginx-deployment
-        image: 346573986387.dkr.ecr.us-east-1.amazonaws.com/udacity_capstone
+        image: 346573986387.dkr.ecr.us-east-1.amazonaws.com/udacity_capstone:v1
         ports:
         - containerPort: 80
 status: {}

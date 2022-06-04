@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   kubernetes: circleci/kubernetes@1.3.0
   aws-eks: circleci/aws-eks@2.2.0
-  aws-ecr: circleci/aws-ecr@0.0.2
+  aws-ecr: circleci/aws-ecr@8.1.2
   aws-ecs: circleci/aws-ecs@0.0.10
 
 jobs:
@@ -110,31 +110,23 @@ workflows:
       - scan-frontend:
           requires: [test-frontend]
       - push-to-dockerhub:
+          name: build-and-push-image-to-dockerhub
           requires: [scan-frontend]
           filters:
             branches:
               only: [master]
-      - aws-ecr/build_and_push_image:
-          account-url: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-          repo: "${AWS_RESOURCE_NAME_PREFIX}"
+      - aws-ecr/build-and-push-image:
+          name: build-and-push-image-to-ecr
+          registry-id: AWS_ECR_REGISTRY_ID
           region: ${AWS_DEFAULT_REGION}
-          tag: "v1"
+          repo: udacity_capstone
+          tag: v1
           requires: [scan-frontend]
-          filters:
-            branches:
-              only: [master]
-      - aws-ecs/deploy-service-update:
-          aws-region: ${AWS_DEFAULT_REGION}
-          family: "${AWS_RESOURCE_NAME_PREFIX}-service"
-          cluster-name: "${AWS_RESOURCE_NAME_PREFIX}-cluster"
-          container-image-name-updates: "container=${AWS_RESOURCE_NAME_PREFIX}-service,image-and-tag=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${AWS_RESOURCE_NAME_PREFIX}:${CIRCLE_SHA1}"
-          verify-revision-is-deployed: true
-          requires: [aws-ecr/build_and_push_image]
           filters:
             branches:
               only: [master]
       - deploy-application:
-          requires: [push-to-dockerhub, aws-ecs/deploy-service-update]
+          requires: [build-and-push-image-to-dockerhub, build-and-push-image-to-ecr]
           filters:
             branches:
               only: [master]
