@@ -6,10 +6,9 @@ WORKDIR /usr/src/app
 
 # Copy frontend
 COPY frontend/ ./frontend/
-RUN cd frontend
-RUN npm install
-RUN npm audit fix --force
-RUN npm run build
+RUN cd frontend && npm install
+RUN cd frontend && npm audit fix --audit-level=critical
+RUN cd frontend && npm run build
 
 # 2. For Nginx setup
 FROM nginx:alpine
