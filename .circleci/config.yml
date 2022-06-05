@@ -127,8 +127,10 @@ jobs:
           show-kubectl-command: true
           resource-file-path: deployments/deployment.yaml
           resource-name: deployment/nginx-deployment
+          watch-timeout: 60m
       - kubernetes/create-or-update-resource:
           resource-file-path: "deployments/deployment.yml"
+          watch-timeout: 60m
       - slack/notify:
           event: fail
           template: basic_fail_1
