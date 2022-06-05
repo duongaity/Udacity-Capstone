@@ -10,3 +10,12 @@ In this project, I apply the skills and knowledge which were learned throughout 
 - Building Kubernetes
 
 ## 
+
+
+
+## References
+
+[!AWS EKS cluster](https://circleci.com/developer/orbs/orb/circleci/aws-eks)
+[!Deploying to AWS ECR](https://circleci.com/developer/orbs/orb/circleci/aws-ecr)
+[!Kubernetes deployments](https://circleci.com/developer/orbs/orb/circleci/kubernetes)
+[!Slack notifications](https://circleci.com/developer/orbs/orb/circleci/slack)

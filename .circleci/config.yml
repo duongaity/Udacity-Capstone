@@ -101,7 +101,7 @@ jobs:
           event: fail
           template: basic_fail_1
    
-  deploy-application:
+  configure-infrastructure:
     docker:
       - image: cimg/node:16.13.2
     steps:
@@ -114,24 +114,31 @@ jobs:
           cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
           install-kubectl: true
       - kubernetes/create-or-update-resource:
-          get-rollout-status: true
           resource-file-path: deployments/deployment.yaml
           resource-name: deployment/nginx-deployment
+          get-rollout-status: true
           show-kubectl-command: true
-      - run:
-          name: Deploy kubectl
-          command: |
-            kubectl get pods
-            kubectl get services
+      - kubernetes/create-or-update-resource:
+          resource-file-path: "deployments/deployment.yml"
       - slack/notify:
           event: fail
           template: basic_fail_1
   
-  send-notify:
+  deploy-application:
     docker:
-      - image: cimg/node:16.13.2
+      - image: cimg/python:3.10
     working_directory: ~/repo
     steps:
+      - checkout
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: deployments/deployment.yaml
+          aws-region: ${AWS_DEFAULT_REGION}
+          install-kubectl: true
+      - run:
+          name: Run kubectl
+          command: |
+            kubectl get pods
+            kubectl get services
       - slack/notify:
           event: pass
           template: basic_success_1
@@ -162,10 +169,10 @@ workflows:
           filters:
             branches:
               only: [master]
-      - deploy-application:
+      - configure-infrastructure:
           requires: [build-and-push-image-to-dockerhub, build-and-push-image-to-ecr]
           filters:
             branches:
               only: [master]
-      - send-notify:
-          requires: [deploy-application]
+      - deploy-application:
+          requires: [configure-infrastructure]
