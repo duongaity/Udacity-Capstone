@@ -103,7 +103,7 @@ jobs:
 
   deploy-cluster:
     docker:
-      - image: cimg/node:16.13.2
+      - image: cimg/python:3.10
     steps:
       - checkout
       - aws-eks/create-cluster:
@@ -115,7 +115,7 @@ jobs:
    
   deploy-kubernetes:
     docker:
-      - image: cimg/node:16.13.2
+      - image: cimg/python:3.10
     steps:
       - checkout
       - aws-eks/update-kubeconfig-with-authenticator:
