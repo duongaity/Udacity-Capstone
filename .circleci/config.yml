@@ -142,7 +142,7 @@ jobs:
       - checkout
       - aws-eks/update-kubeconfig-with-authenticator:
           install-kubectl: true
-          cluster-name: deployments/deployment.yaml
+          cluster-name: udacity-cluster-fdb2234
           aws-region: ${AWS_DEFAULT_REGION}
       - run:
           name: Deploy application
@@ -189,13 +189,13 @@ workflows:
       #     filters:
       #       branches:
       #         only: [master]
-      - deploy-kubernetes:
-          # requires: [deploy-cluster]
-          filters:
-            branches:
-              only: [master]
+      # - deploy-kubernetes:
+      #     # requires: [deploy-cluster]
+      #     filters:
+      #       branches:
+      #         only: [master]
       - deploy-application:
-          requires: [deploy-kubernetes]
+          # requires: [deploy-kubernetes]
           filters:
             branches:
               only: [master]
