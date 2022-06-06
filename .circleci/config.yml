@@ -76,30 +76,6 @@ jobs:
       - slack/notify:
           event: fail
           template: basic_fail_1
-  
-  push-to-dockerhub:
-    docker:
-      - image: cimg/node:16.13.2
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - setup_remote_docker:
-          version: 20.10.14
-      - run:
-          name: Build Docker Image
-          command: |
-            docker build --tag=$DOCKER_IMAGE_NAME .
-      - run:
-          name: Push Docker Image to DockerHub
-          command: |
-            echo "Docker DOCKER_USERNAME: $DOCKER_USERNAME"
-            echo "Docker DOCKER_IMAGE: $DOCKER_IMAGE_NAME"
-            docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-            docker tag $DOCKER_IMAGE_NAME $DOCKER_USERNAME/$DOCKER_IMAGE_NAME
-            docker push $DOCKER_USERNAME/$DOCKER_IMAGE_NAME
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
 
   deploy-cluster:
     docker:
@@ -121,12 +97,11 @@ jobs:
       - aws-eks/update-kubeconfig-with-authenticator:
           install-kubectl: true
           aws-region: ${AWS_DEFAULT_REGION}
-          cluster-name: udacity-cluster-fdb2234
+          cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
       - kubernetes/create-or-update-resource:
-          # get-rollout-status: true
           show-kubectl-command: true
           resource-file-path: deployments/deployment.yaml
-          resource-name: deployment/eks-sample-linux-app
+          resource-name: deployment/eks-sample-app
           watch-timeout: 60m
       - kubernetes/create-or-update-resource:
           resource-file-path: "deployments/deployment.yaml"
@@ -142,7 +117,7 @@ jobs:
       - checkout
       - aws-eks/update-kubeconfig-with-authenticator:
           install-kubectl: true
-          cluster-name: udacity-cluster-fdb2234
+          cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
           aws-region: ${AWS_DEFAULT_REGION}
       - run:
           name: Deploy application
@@ -156,46 +131,35 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - lint-test-frontend:
-      #     requires: [build-frontend]
-      # - unit-test-frontend:
-      #     requires: [build-frontend]
-      # - scan-frontend:
-      #     requires: [lint-test-frontend, unit-test-frontend]
-      # - push-to-dockerhub:
-      #     name: build-and-push-image-to-dockerhub
-      #     requires: [scan-frontend]
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - aws-ecr/build-and-push-image:
-      #     name: build-and-push-image-to-ecr
-      #     registry-id: AWS_ECR_REGISTRY_ID
-      #     region: ${AWS_DEFAULT_REGION}
-      #     repo: udacity_capstone
-      #     tag: v1
-      #     requires: [scan-frontend]
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - aws-eks/create-cluster:
-      #     name: deploy-cluster
-      #     cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
-      #     aws-region: ${AWS_DEFAULT_REGION}
-      #     requires: [build-and-push-image-to-ecr]
-      # - deploy-cluster:
-      #     requires: [build-and-push-image-to-dockerhub, build-and-push-image-to-ecr]
-      #     filters:
-      #       branches:
-      #         only: [master]
-      # - deploy-kubernetes:
-      #     # requires: [deploy-cluster]
-      #     filters:
-      #       branches:
-      #         only: [master]
+      - build-frontend
+      - lint-test-frontend:
+          requires: [build-frontend]
+      - unit-test-frontend:
+          requires: [build-frontend]
+      - scan-frontend:
+          requires: [lint-test-frontend, unit-test-frontend]
+      - aws-ecr/build-and-push-image:
+          name: push-image-to-ecr
+          registry-id: AWS_ECR_REGISTRY_ID
+          region: ${AWS_DEFAULT_REGION}
+          repo: udacity_capstone
+          tag: v1
+          requires: [scan-frontend]
+          filters:
+            branches:
+              only: [master]
+      - deploy-cluster:
+          requires: [push-image-to-ecr]
+          filters:
+            branches:
+              only: [master]
+      - deploy-kubernetes:
+          requires: [deploy-cluster]
+          filters:
+            branches:
+              only: [master]
       - deploy-application:
-          # requires: [deploy-kubernetes]
+          requires: [deploy-kubernetes]
           filters:
             branches:
               only: [master]

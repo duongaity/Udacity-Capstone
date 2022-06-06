@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: eks-sample-linux-app
+  name: eks-sample-app
   # namespace: eks-sample-app
   labels:
-    app: eks-sample-linux-app
+    app: eks-sample-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: eks-sample-linux-app
+      app: eks-sample-app
   template:
     metadata:
       labels:
-        app: eks-sample-linux-app
+        app: eks-sample-app
     spec:
       # affinity:
       #   nodeAffinity:
@@ -40,13 +40,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: eks-sample-linux-service
+  name: eks-sample-service
   # namespace: eks-sample-app
   labels:
-    app: eks-sample-linux-app
+    app: eks-sample-app
 spec:
   selector:
-    app: eks-sample-linux-app
+    app: eks-sample-app
   ports:
     - protocol: TCP
       port: 80
