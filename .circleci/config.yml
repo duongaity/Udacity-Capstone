@@ -121,7 +121,7 @@ jobs:
       - aws-eks/update-kubeconfig-with-authenticator:
           install-kubectl: true
           aws-region: ${AWS_DEFAULT_REGION}
-          cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
+          cluster-name: udacity-cluster-fdb2234
       - kubernetes/create-or-update-resource:
           get-rollout-status: true
           show-kubectl-command: true
@@ -156,41 +156,41 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - lint-test-frontend:
-          requires: [build-frontend]
-      - unit-test-frontend:
-          requires: [build-frontend]
-      - scan-frontend:
-          requires: [lint-test-frontend, unit-test-frontend]
+      # - build-frontend
+      # - lint-test-frontend:
+      #     requires: [build-frontend]
+      # - unit-test-frontend:
+      #     requires: [build-frontend]
+      # - scan-frontend:
+      #     requires: [lint-test-frontend, unit-test-frontend]
       # - push-to-dockerhub:
       #     name: build-and-push-image-to-dockerhub
       #     requires: [scan-frontend]
       #     filters:
       #       branches:
       #         only: [master]
-      - aws-ecr/build-and-push-image:
-          name: build-and-push-image-to-ecr
-          registry-id: AWS_ECR_REGISTRY_ID
-          region: ${AWS_DEFAULT_REGION}
-          repo: udacity_capstone
-          tag: v1
-          requires: [scan-frontend]
-          filters:
-            branches:
-              only: [master]
-      - aws-eks/create-cluster:
-          name: deploy-cluster
-          cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
-          aws-region: ${AWS_DEFAULT_REGION}
-          requires: [build-and-push-image-to-ecr]
+      # - aws-ecr/build-and-push-image:
+      #     name: build-and-push-image-to-ecr
+      #     registry-id: AWS_ECR_REGISTRY_ID
+      #     region: ${AWS_DEFAULT_REGION}
+      #     repo: udacity_capstone
+      #     tag: v1
+      #     requires: [scan-frontend]
+      #     filters:
+      #       branches:
+      #         only: [master]
+      # - aws-eks/create-cluster:
+      #     name: deploy-cluster
+      #     cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
+      #     aws-region: ${AWS_DEFAULT_REGION}
+      #     requires: [build-and-push-image-to-ecr]
       # - deploy-cluster:
       #     requires: [build-and-push-image-to-dockerhub, build-and-push-image-to-ecr]
       #     filters:
       #       branches:
       #         only: [master]
       - deploy-kubernetes:
-          requires: [deploy-cluster]
+          # requires: [deploy-cluster]
           filters:
             branches:
               only: [master]
