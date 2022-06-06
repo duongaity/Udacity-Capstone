@@ -129,7 +129,7 @@ jobs:
           resource-name: deployment/eks-sample-linux-app
           watch-timeout: 60m
       - kubernetes/create-or-update-resource:
-          resource-file-path: "deployments/deployment.yml"
+          resource-file-path: "deployments/deployment.yaml"
           watch-timeout: 60m
       - slack/notify:
           event: fail
