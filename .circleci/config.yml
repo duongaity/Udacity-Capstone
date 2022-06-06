@@ -143,16 +143,16 @@ workflows:
       - run-lint:
           requires: [build-frontend]
       - test-frontend:
-          requires: [run-lint]
+          requires: [build-frontend]
       - scan-frontend:
-          requires: [test-frontend]
+          requires: [build-frontend]
       - aws-ecr/build-and-push-image:
           name: push-image-to-ecr
           registry-id: AWS_ECR_REGISTRY_ID
           region: ${AWS_DEFAULT_REGION}
           repo: udacity_capstone
           tag: v1
-          requires: [scan-frontend]
+          requires: [run-lint, test-frontend, scan-frontend]
           filters:
             branches:
               only: [master]
