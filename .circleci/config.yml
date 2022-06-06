@@ -100,11 +100,11 @@ jobs:
           cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
       - kubernetes/create-or-update-resource:
           show-kubectl-command: true
-          resource-file-path: deployments/deployment.yaml
+          resource-file-path: configs/deployment.yaml
           resource-name: deployment/eks-sample-app
           watch-timeout: 60m
       - kubernetes/create-or-update-resource:
-          resource-file-path: "deployments/deployment.yaml"
+          resource-file-path: "configs/deployment.yaml"
           watch-timeout: 60m
       - slack/notify:
           event: fail

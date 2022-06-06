@@ -14,7 +14,7 @@ RUN cd frontend && npm run build
 FROM nginx:alpine
 
 # Copy nginx config
-COPY /nginx/nginx.conf /etc/nginx/nginx.conf
+COPY /configs/nginx.conf /etc/nginx/nginx.conf
 
 # Remove default nginx static assets
 RUN rm -rf /usr/share/nginx/html/*
