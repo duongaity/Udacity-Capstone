@@ -183,6 +183,7 @@ workflows:
           name: deploy-cluster
           cluster-name: udacity-cluster-${CIRCLE_WORKFLOW_ID:0:7}
           aws-region: ${AWS_DEFAULT_REGION}
+          zones: 'us-east-1a,us-east-1b,us-east-1d'
           requires: [build-and-push-image-to-ecr]
       # - deploy-cluster:
       #     requires: [build-and-push-image-to-dockerhub, build-and-push-image-to-ecr]
