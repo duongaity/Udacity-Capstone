@@ -6,7 +6,7 @@ const TodoItem = ({ id, title }) => {
 
 	const dispatch = useDispatch();
 
-	const removeTask=()=>{
+	const removeTask = () => {
 		dispatch(
 			deleteTask({
 				id: id
@@ -20,7 +20,7 @@ const TodoItem = ({ id, title }) => {
 				{title}
 			</div>
 			<div>
-				<button className="remove-task-button" onClick={()=>{
+				<button className="remove-task-button" onClick={() => {
 					removeTask();
 				}}>Delete</button>
 			</div>

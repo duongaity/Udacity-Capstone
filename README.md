@@ -9,10 +9,6 @@ In this project, I apply the skills and knowledge which were learned throughout 
 - Building Docker
 - Building Kubernetes
 
-## 
-
-
-
 ## References
 
 - [AWS EKS cluster](https://circleci.com/developer/orbs/orb/circleci/aws-eks)

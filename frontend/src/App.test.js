@@ -11,5 +11,5 @@ test('renders title', () => {
             <App />
         </Provider>
     );
-    expect(getByText('My Tasks')).toBeInTheDocument()
+    expect(getByText('This is My Tasks')).toBeInTheDocument()
 });

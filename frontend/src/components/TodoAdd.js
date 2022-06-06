@@ -10,8 +10,7 @@ const TodoAdd = () => {
 	const onSubmit = (event) => {
 		event.preventDefault();
 
-		if(value.trim().length === 0)
-		{
+		if (value.trim().length === 0) {
 			alert("Enter a task before adding !!");
 			setValue("");
 			return;
