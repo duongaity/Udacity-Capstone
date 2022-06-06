@@ -15,25 +15,25 @@ spec:
       labels:
         app: eks-sample-linux-app
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/arch
-                operator: In
-                values:
-                - amd64
-                - arm64
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #       - matchExpressions:
+      #         - key: kubernetes.io/arch
+      #           operator: In
+      #           values:
+      #           - amd64
+      #           - arm64
       containers:
       - name: nginx
         image: 346573986387.dkr.ecr.us-east-1.amazonaws.com/udacity_capstone:v1
         ports:
         - name: http
           containerPort: 80
-        imagePullPolicy: IfNotPresent
-      nodeSelector:
-        kubernetes.io/os: linux
+        imagePullPolicy: Always
+      # nodeSelector:
+      #   kubernetes.io/os: linux
 
 ---
 
@@ -51,3 +51,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
+  type: LoadBalancer

@@ -123,7 +123,7 @@ jobs:
           aws-region: ${AWS_DEFAULT_REGION}
           cluster-name: udacity-cluster-fdb2234
       - kubernetes/create-or-update-resource:
-          get-rollout-status: true
+          # get-rollout-status: true
           show-kubectl-command: true
           resource-file-path: deployments/deployment.yaml
           resource-name: deployment/eks-sample-linux-app
