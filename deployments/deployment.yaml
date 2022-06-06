@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
       - image: 346573986387.dkr.ecr.us-east-1.amazonaws.com/udacity_capstone:v1
-        name: nginx-deployment
+        name: udacitycapstoneapp
         imagePullPolicy: Always
         resources: {}
         ports:
