@@ -12,6 +12,7 @@ RUN cd frontend && npm run build
 
 # 3. Setup Nginx
 FROM nginx:alpine
+test fail
 
 # Copy nginx config
 COPY /configs/nginx.conf /etc/nginx/nginx.conf

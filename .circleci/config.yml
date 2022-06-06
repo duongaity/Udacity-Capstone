@@ -27,24 +27,26 @@ jobs:
           event: fail
           template: basic_fail_1
   
-  lint-test-frontend:
+  run-lint:
     docker:
       - image: circleci/node:13.8.0
     steps:
       - checkout
-      - restore_cache:
-          keys: [frontend-build]
       - run:
-          name: Frontend Lint Test
+          name: Install hadolint
           command: |
-            cd frontend
-            npm install
-            npm run lint
+            sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64
+            sudo chmod +x /bin/hadolint
+      - run:
+          name: Run Lint
+          command: |
+            ls
+            hadolint Dockerfile --ignore DL3003
       - slack/notify:
           event: fail
           template: basic_fail_1
 
-  unit-test-frontend:
+  test-frontend:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -52,11 +54,17 @@ jobs:
       - restore_cache:
           keys: [frontend-build]
       - run:
-          name: Frontend Unit test
+          name: Lint test
           command: |
             cd frontend
             npm install
             npm run test
+      - run:
+          name: Unit test
+          command: |
+            cd frontend
+            npm install
+            npm run lint
       - slack/notify:
           event: fail
           template: basic_fail_1
@@ -132,12 +140,12 @@ workflows:
   default:
     jobs:
       - build-frontend
-      - lint-test-frontend:
+      - run-lint:
           requires: [build-frontend]
-      - unit-test-frontend:
-          requires: [build-frontend]
+      - test-frontend:
+          requires: [run-lint]
       - scan-frontend:
-          requires: [lint-test-frontend, unit-test-frontend]
+          requires: [test-frontend]
       - aws-ecr/build-and-push-image:
           name: push-image-to-ecr
           registry-id: AWS_ECR_REGISTRY_ID
